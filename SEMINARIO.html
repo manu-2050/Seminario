@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es-ES" xml:lang="es-ES"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Manuel L. Eestupiñan-Owen, Yeison Garcia, Paola peralta">
+<meta name="description" content="Desarrollo del seminario: coeficientes y distancias de similitud enfocado en el modo Q distancias D1 Y D14, se presentan la explicacion matematica, aplicacion el programa r y ejmplos de investigaciones donde se utilicen estas distancias.">
+
+<title>Seminario-Introducción al modo Q</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Seminario_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Seminario_files/libs/quarto-html/quarto.js"></script>
+<script src="Seminario_files/libs/quarto-html/popper.min.js"></script>
+<script src="Seminario_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Seminario_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Seminario_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Seminario_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Seminario_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Seminario_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Seminario_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<style>
+
+      .quarto-title-block .quarto-title-banner {
+        background: #a6bddb;
+      }
+</style>
+
+
+</head>
+
+<body>
+
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <div class="quarto-title-block"><div><h1 class="title">Seminario-Introducción al modo Q</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Código</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Mostrar todo el código</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Ocultar todo el código</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">Ver el código fuente</a></li></ul></div></div>
+            <p class="subtitle lead">Diferencias entre Distancias Métricas, Semi-métricas y no métricas: Euclídea y Bray Curtis.</p>
+                  <div>
+        <div class="description">
+          Desarrollo del seminario: coeficientes y distancias de similitud enfocado en el modo Q distancias D1 Y D14, se presentan la explicacion matematica, aplicacion el programa r y ejmplos de investigaciones donde se utilicen estas distancias.
+        </div>
+      </div>
+                </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Autor/a</div>
+      <div class="quarto-title-meta-contents">
+               <p>Manuel L. Eestupiñan-Owen, Yeison Garcia, Paola peralta </p>
+            </div>
+    </div>
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenido</h2>
+   
+  <ul>
+  <li><a href="#librerias" id="toc-librerias" class="nav-link active" data-scroll-target="#librerias"><span style="color: #045a8d;">Librerias</span></a></li>
+  <li><a href="#modo-q-coeficientes-de-distancia" id="toc-modo-q-coeficientes-de-distancia" class="nav-link" data-scroll-target="#modo-q-coeficientes-de-distancia"><span style="color: #045a8d;">Modo Q coeficientes de distancia</span></a>
+  <ul>
+  <li><a href="#distancia-métricas" id="toc-distancia-métricas" class="nav-link" data-scroll-target="#distancia-métricas"><span style="color: #3690c0;">Distancia métricas</span></a></li>
+  <li><a href="#distancia-semimetrica" id="toc-distancia-semimetrica" class="nav-link" data-scroll-target="#distancia-semimetrica"><span style="color: #3690c0;">Distancia semimetrica</span></a></li>
+  <li><a href="#distancias-no-métrico" id="toc-distancias-no-métrico" class="nav-link" data-scroll-target="#distancias-no-métrico"><span style="color: #3690c0;">Distancias no métrico</span></a></li>
+  </ul></li>
+  <li><a href="#distancia-euclidiana" id="toc-distancia-euclidiana" class="nav-link" data-scroll-target="#distancia-euclidiana"><span style="color: #045a8d;">Distancia euclidiana</span></a>
+  <ul>
+  <li><a href="#efecto-de-doble-cero" id="toc-efecto-de-doble-cero" class="nav-link" data-scroll-target="#efecto-de-doble-cero"><span style="color: #3690c0;">Efecto de doble cero</span></a></li>
+  <li><a href="#efecto-de-la-abundancia-en-la-distancia-euclídea" id="toc-efecto-de-la-abundancia-en-la-distancia-euclídea" class="nav-link" data-scroll-target="#efecto-de-la-abundancia-en-la-distancia-euclídea"><span style="color: #3690c0;">Efecto de la abundancia en la distancia Euclídea</span></a></li>
+  <li><a href="#distancia-euclidiana-modificada" id="toc-distancia-euclidiana-modificada" class="nav-link" data-scroll-target="#distancia-euclidiana-modificada"><span style="color: #3690c0;">Distancia euclidiana modificada</span></a></li>
+  </ul></li>
+  <li><a href="#distancia-bray-curtis" id="toc-distancia-bray-curtis" class="nav-link" data-scroll-target="#distancia-bray-curtis"><span style="color: #045a8d;">Distancia Bray-Curtis</span></a></li>
+  <li><a href="#base-de-datos" id="toc-base-de-datos" class="nav-link" data-scroll-target="#base-de-datos"><span style="color: #045a8d;">Base de datos</span></a></li>
+  <li><a href="#calculo-de-las-distancias-euclídea-d1-y-bray-curtis-d14-con-el-paquete-vegan" id="toc-calculo-de-las-distancias-euclídea-d1-y-bray-curtis-d14-con-el-paquete-vegan" class="nav-link" data-scroll-target="#calculo-de-las-distancias-euclídea-d1-y-bray-curtis-d14-con-el-paquete-vegan"><span style="color: #045a8d;">Calculo de las distancias Euclídea D1 Y Bray Curtis D14 con el paquete Vegan</span></a>
+  <ul>
+  <li><a href="#distancia-euclídea" id="toc-distancia-euclídea" class="nav-link" data-scroll-target="#distancia-euclídea"><span style="color: #3690c0;">Distancia Euclídea</span></a></li>
+  <li><a href="#distancia-bray-curtis-1" id="toc-distancia-bray-curtis-1" class="nav-link" data-scroll-target="#distancia-bray-curtis-1"><span style="color: #3690c0;">Distancia-Bray Curtis</span></a></li>
+  </ul></li>
+  <li><a href="#matrices-de-disimilitud-con-el-paquete-factoexta" id="toc-matrices-de-disimilitud-con-el-paquete-factoexta" class="nav-link" data-scroll-target="#matrices-de-disimilitud-con-el-paquete-factoexta"><span style="color: #045a8d;">Matrices de disimilitud con el paquete FactoExta</span></a>
+  <ul>
+  <li><a href="#matrices-de-disimilitud-bray-con-el-paquete-factoexta" id="toc-matrices-de-disimilitud-bray-con-el-paquete-factoexta" class="nav-link" data-scroll-target="#matrices-de-disimilitud-bray-con-el-paquete-factoexta"><span style="color: #3690c0;">Matrices de disimilitud bray con el paquete FactoExta</span></a></li>
+  <li><a href="#matrices-de-disimilitud-euclidea-con-el-paquete-factoexta" id="toc-matrices-de-disimilitud-euclidea-con-el-paquete-factoexta" class="nav-link" data-scroll-target="#matrices-de-disimilitud-euclidea-con-el-paquete-factoexta"><span style="color: #3690c0;">Matrices de disimilitud Euclidea con el paquete FactoExta</span></a></li>
+  </ul></li>
+  <li><a href="#ejemplo-de-un-estudio-de-caso" id="toc-ejemplo-de-un-estudio-de-caso" class="nav-link" data-scroll-target="#ejemplo-de-un-estudio-de-caso"><span style="color: #045a8d;">Ejemplo de un estudio de caso</span></a>
+  <ul>
+  <li><a href="#aplicando-la-distancia-euclideas" id="toc-aplicando-la-distancia-euclideas" class="nav-link" data-scroll-target="#aplicando-la-distancia-euclideas"><span style="color: #3690c0;">1. Aplicando la distancia euclideas</span></a>
+  <ul class="collapse">
+  <li><a href="#morfometría-comparada-del-aparato-mandibular-en-especies-de-chirostoma-atheriniformes-atherinopsidae-del-lago-de-pátzcuaro-michoacán-méxico" id="toc-morfometría-comparada-del-aparato-mandibular-en-especies-de-chirostoma-atheriniformes-atherinopsidae-del-lago-de-pátzcuaro-michoacán-méxico" class="nav-link" data-scroll-target="#morfometría-comparada-del-aparato-mandibular-en-especies-de-chirostoma-atheriniformes-atherinopsidae-del-lago-de-pátzcuaro-michoacán-méxico">Morfometría comparada del aparato mandibular en especies de&nbsp;<em>Chirostoma</em>&nbsp;(Atheriniformes: Atherinopsidae) del Lago de Pátzcuaro, Michoacán, México</a></li>
+  <li><a href="#que-hicieron" id="toc-que-hicieron" class="nav-link" data-scroll-target="#que-hicieron">Que hicieron</a></li>
+  <li><a href="#como-incorpararon-la-distancia-euclidea" id="toc-como-incorpararon-la-distancia-euclidea" class="nav-link" data-scroll-target="#como-incorpararon-la-distancia-euclidea">Como incorpararon la distancia Euclidea</a></li>
+  <li><a href="#resultados" id="toc-resultados" class="nav-link" data-scroll-target="#resultados">Resultados</a></li>
+  </ul></li>
+  <li><a href="#aplicando-la-distancia-bray" id="toc-aplicando-la-distancia-bray" class="nav-link" data-scroll-target="#aplicando-la-distancia-bray"><span style="color: #3690c0;">2. Aplicando la Distancia-Bray</span></a>
+  <ul class="collapse">
+  <li><a href="#cambio-temporal-en-la-estructura-de-la-comunidad-coralina-del-área-de-santa-marta-parque-nacional-natural-tayrona-caribe-colombiano" id="toc-cambio-temporal-en-la-estructura-de-la-comunidad-coralina-del-área-de-santa-marta-parque-nacional-natural-tayrona-caribe-colombiano" class="nav-link" data-scroll-target="#cambio-temporal-en-la-estructura-de-la-comunidad-coralina-del-área-de-santa-marta-parque-nacional-natural-tayrona-caribe-colombiano">CAMBIO TEMPORAL EN LA ESTRUCTURA DE LA COMUNIDAD CORALINA DEL ÁREA DE SANTA MARTA – PARQUE NACIONAL NATURAL TAYRONA (CARIBE COLOMBIANO)</a></li>
+  <li><a href="#que-hicieron-1" id="toc-que-hicieron-1" class="nav-link" data-scroll-target="#que-hicieron-1">Que hicieron</a></li>
+  <li><a href="#como-incorpararon-la-distancia-bray" id="toc-como-incorpararon-la-distancia-bray" class="nav-link" data-scroll-target="#como-incorpararon-la-distancia-bray">Como incorpararon la Distancia-Bray</a></li>
+  <li><a href="#resultados-1" id="toc-resultados-1" class="nav-link" data-scroll-target="#resultados-1">Resultados</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#bibliografía" id="toc-bibliografía" class="nav-link" data-scroll-target="#bibliografía"><span style="color: #045a8d;">Bibliografía</span></a></li>
+  </ul>
+</nav>
+</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="librerias" class="level1">
+<h1><span style="color: #045a8d;">Librerias</span></h1>
+<div class="cell">
+<details>
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vegan)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="modo-q-coeficientes-de-distancia" class="level1">
+<h1><span style="color: #045a8d;">Modo Q coeficientes de distancia</span></h1>
+<section id="distancia-métricas" class="level3">
+<h3 class="anchored" data-anchor-id="distancia-métricas"><span style="color: #3690c0;">Distancia métricas</span></h3>
+<p>En el modo Q, los coeficientes miden la distancia o similitud entre parejas de objetos (ej. distancia euclídea o el coeficiente de similitud de Jaccard). Estos alcanzan su valor máximo cuando los objetos son completamente distintos o cuando son iguales a cero.</p>
+<p>Los coeficientes se pueden clasificar en:</p>
+<p>Las distancias métricas son usadas para datos cuantitativos, bajo las siguientes propiedades</p>
+<ol type="1">
+<li>Si a = b, entonces D(a,b) = 0</li>
+<li>Si a ≠ b, entonces D(a,b) &gt; 0</li>
+<li>D(a,b) = D(b,a)</li>
+<li>D(a,b) + D(b,a) &gt; D(a, c)</li>
+</ol>
+<p>Esta última propiedad se conoce como el axioma del triángulo no equilátero, indica que la suma de dos lados de un triángulo en un espacio euclídeo es necesariamente iguales o mayor que el tercer lado.</p>
+</section>
+<section id="distancia-semimetrica" class="level3">
+<h3 class="anchored" data-anchor-id="distancia-semimetrica"><span style="color: #3690c0;">Distancia semimetrica</span></h3>
+<p>En el segundo grupo se encuentran las simétricas las cuales no cumplen el axioma (4) por lo que los autovalores se afectan en una matriz de covarianza. Legendre y Legendre (1983) afirman que algunas de las medidas de distancia obtenidas por medio del complemento de las similitudes S<sub>1</sub>-S<sub>23</sub> no siguen la cuarta propiedad de las medidas métricas, ya que no satisfacen el axioma del triángulo.</p>
+</section>
+<section id="distancias-no-métrico" class="level3">
+<h3 class="anchored" data-anchor-id="distancias-no-métrico"><span style="color: #3690c0;">Distancias no métrico</span></h3>
+<p>Estas pueden presentar valores negativos violando la propiedad de positividad de una distancia métrica.</p>
+</section>
+</section>
+<section id="distancia-euclidiana" class="level1">
+<h1><span style="color: #045a8d;">Distancia euclidiana</span></h1>
+<p>La distancia euclidiana entre dos sitios es representa la longitud del vector que conecta los sitios. Es la distancia más conocida entre las métricas pudiendo calcularse por medio del teorema de Pitágoras (Legendre y Legendre, 1983). Los objetos son posicionados de acuerdo con los valores que toma cada variable en un espacio p-dimencional. Esto es, para datos continuos y respecto a cualquier atributo dado, la distancia euclidiana entre los datos de dos muestras es |y<sub>i1</sub> - y<sub>i2</sub>| donde y<sub>i1</sub> es el valor de una muestra y y<sub>i2</sub> es el valor de la segunda muestra (Clifford y Stiphenson, 1975). Para n muestras. La distancia euclidiana no tiene límite superior, se incrementa según aumenta el número de variables. Su valor solo depende de la escala de cada variable, aunque también se pueden cambiar la escala de algunas variables obteniendo medidas de distancia (Legendre y Legendre, 1983). Si existen solo existen dos variables esta expresión llega a ser la medida de la hipotenusa del ángulo recto del triángulo (Legendre y Legendre, 1983).</p>
+<div id="fig-Figura1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="euclidea.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figura&nbsp;1: Ecuación para la distancia Euclidiana.</figcaption>
+</figure>
+</div>
+<p><a href="#fig-Figura1">Figura&nbsp;1</a> Donde <strong>X<sub>1</sub></strong>, es la muestra 1; <strong>X<sub>2</sub></strong> es la muestra 2; <strong>y<sub>i1</sub></strong> es el valor de la variable en la muestra 1; <strong>y<sub>i2</sub></strong> es el valor de la variable en la muestra 2 y <strong>n</strong> es el número de variables (Rodríguez-Barrios, J. 2023).</p>
+<div id="fig-Figura2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://www.lifeder.com/wp-content/uploads/2019/11/Distancia-2-644x420.jpg" class="img-fluid figure-img" width="480"></p>
+<figcaption class="figure-caption">Figura&nbsp;2: La distancia entre dos puntos P y Q del plano cumple el teorema de Pitágoras. (Elaborado por Ricardo Pérez).</figcaption>
+</figure>
+</div>
+<p><a href="#fig-Figura2">Figura&nbsp;2</a> Donde <strong>X<sub>Q</sub></strong> y <strong>Y<sub>Q</sub></strong> son las cordenadas (x,y) del punto Q; <strong>X<sub>P</sub></strong> y <strong>Y<sub>P</sub></strong> son las cordenadas (x,y) del punto P.</p>
+<p>La distancia euclidiana como una medida de la semejanza entre muestras está fuertemente impactada por la diferencia entre las abundancias de especies, esto puede causar una paradoja: dos muestras sin ninguna especie en común puede llegar a tener una distancia más pequeña que dos muestras que contengan la misma especie (Legendre y Legendre, 1983). Por lo tanto, la distancia euclidiana no debe ser utilizada cuando se trabaja con comparaciones basadas en la abundancia de especies (Legendre y Legendre, 1983).</p>
+<section id="efecto-de-doble-cero" class="level3">
+<h3 class="anchored" data-anchor-id="efecto-de-doble-cero"><span style="color: #3690c0;">Efecto de doble cero</span></h3>
+<p>El doble cero puede contribuir a la reducción de la distancia, esto puede evitarse cuando se trabaja con variables de abundancia de especies, mientras que en el caso de las variables físicas el doble cero puede ser una base validad para la comparación de muestras. Aunque la distancia Euclidiana es la más conocida entre las distancias métricas, no es apropiado utilizarla en análisis de datos biológicos como la abundancia, en general en la naturaleza las relaciones lineales no son muy comunes por lo es necesario aplicar trasformaciones sin embargo en muchos casos no son efectivas. En los datos biológicos es normal encontrar una gran cantidad de ceros (especies no encontradas en determinados sitios), el problema es que la distancia Euclidiana incrementa la similitud entre comunidades que presentan ceros para la misma especie. En este caso, el tener un valor de cero puede deberse a varias razones, por ejemplo puede ser que aunque la especie ocurre en ese lugar no pudo ser muestreada por otro lado cuando se trabaja con datos abióticos normalmente el cero implica la ausencia de alguna variable , por ejemplo tener cero mg de un contaminante es una información valida.</p>
+<div class="cell">
+<details>
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear un data frame con 6 especies</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">sp1 =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">sp2 =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">sp3 =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">sp4 =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">sp5 =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">sp6 =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(datos) <span class="ot">&lt;-</span> LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Titulo del data frame</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(datos, <span class="at">caption =</span> <span class="st">"Efecto del doble cero"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Efecto del doble cero</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">sp1</th>
+<th style="text-align: right;">sp2</th>
+<th style="text-align: right;">sp3</th>
+<th style="text-align: right;">sp4</th>
+<th style="text-align: right;">sp5</th>
+<th style="text-align: right;">sp6</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">B</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Distancia euclidia para las 6 especies</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">vegdist</span>(datos, <span class="st">"euclidean"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  A B
+B 2  
+C 2 2</code></pre>
+</div>
+</div>
+<p>Según la matriz de distancia las 3 comunidades son muy similares. En el caso de la comunidad A y C no se presenta ninguna especie en común sin embargo la matriz indica una alta similaridad entre ellas esto debido al efecto del doble cero.</p>
+</section>
+<section id="efecto-de-la-abundancia-en-la-distancia-euclídea" class="level3">
+<h3 class="anchored" data-anchor-id="efecto-de-la-abundancia-en-la-distancia-euclídea"><span style="color: #3690c0;">Efecto de la abundancia en la distancia Euclídea</span></h3>
+<p>Otra situación que es muy común con los datos de abundancia es que se presenten especies muy dominantes. La distancia euclídea eleva al cuadrado las abundancias, en consecuencia, incrementa el efecto de las especies dominantes.</p>
+<div class="cell">
+<details>
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Data fren con 3 especies</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>datos1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">spp1=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>),<span class="at">spp2=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">8</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">spp3=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">7</span>))</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(datos1) <span class="ot">&lt;-</span> LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Titulo del data frame</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(datos1, <span class="at">caption =</span> <span class="st">"Efecto de la abundancia"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Efecto de la abundancia</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">spp1</th>
+<th style="text-align: right;">spp2</th>
+<th style="text-align: right;">spp3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">B</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">7</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Distancia euclidia para las 3 especies</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vegan)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">vegdist</span>(datos1, <span class="st">"euclidean"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>          A         B
+B  1.732051          
+C  9.219544 10.677078</code></pre>
+</div>
+</div>
+<p>Las comunidades A y C comparten dos especies mientras que A y B, B y C comparten tan solo una especie, sin embargo, la distancia entre A y B es menor (1.73) que la distancia entre A y C (9.21) debido al efecto de la abundancia. En otras palabras, dos comunidades pueden parecer más disimiles de lo que en realidad son cuando existe una gran diferencia en la abundancia de las especies que comparten.</p>
+</section>
+<section id="distancia-euclidiana-modificada" class="level3">
+<h3 class="anchored" data-anchor-id="distancia-euclidiana-modificada"><span style="color: #3690c0;">Distancia euclidiana modificada</span></h3>
+<p>Legendre y Legendre (1983) mencionan que en el caso de las abundancias de especies se han propuesto diversas modificaciones a la distancia euclidiana para tratar de solucionar la desventaja que este presenta.</p>
+</section>
+</section>
+<section id="distancia-bray-curtis" class="level1">
+<h1><span style="color: #045a8d;">Distancia Bray-Curtis</span></h1>
+<p>La Distancia-Bray-Curtis se refiere a la diferencia total en la abundancia de especies entre dos sitios, dividido para la abundancia total en cada sitio. &nbsp;Esta distancia se centra en la abundancia relativa de las especies, además los valores que esta presenta va de 0 a 1 (Bray y Curtis, 1957; Espinosa, 2019).</p>
+<p>Algunas ventajas de usar Bray-Curtis son las siguientes:</p>
+<ol type="1">
+<li>Dos muestras iguales toman el valor 1.</li>
+<li>Cuando no hay especies en común el valor es 0.</li>
+<li>No es afectado por los cambios en las unidades de medida.</li>
+<li>No es afectado por las muestras (especies) ausentes.</li>
+<li>No es afectado por el tamaño de muestras.</li>
+<li>Detecta diferencias en abundancia total cuando las abundancias relativas son idénticas.</li>
+</ol>
+<p>Existen otras formas de medir distancias entre dos localidades. En ecología una de las distancias más utilizada es la de Bray-Curtis, esta distancia es el opuesto del porcentaje de similitud. Calculada de la siguiente forma:</p>
+<div id="fig-Figura3" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="bray.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+<p>Dónde <strong>ai</strong> representa la abundancia o presencia de una especie <strong>i</strong> en el conjunto de datos; bi, representa la abundancia o presencia de una especie <strong>i</strong> en el conjunto de datos; Σ, representa la suma de todos los valores para cada especie en ambos conjuntos de datos.</p>
+<p>La distancia Bray-Curtis resulta más intuitiva porque las especies comunes y raras tienen pesos relativamente similares, mientras que la distancia euclidiana depende de las especies más abundantes. Esto sucede porque las distancias euclidianas se basan en diferencias al cuadrado, mientras que Bray-Curtis utiliza diferencias absolutas.</p>
+</section>
+<section id="base-de-datos" class="level1">
+<h1><span style="color: #045a8d;">Base de datos</span></h1>
+<div class="cell">
+<details>
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>insectos <span class="ot">&lt;-</span><span class="fu">read.csv2</span>(<span class="st">"Insectos.csv"</span>,<span class="at">row.names=</span><span class="dv">1</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="calculo-de-las-distancias-euclídea-d1-y-bray-curtis-d14-con-el-paquete-vegan" class="level1">
+<h1><span style="color: #045a8d;">Calculo de las distancias Euclídea D1 Y Bray Curtis D14 con el paquete Vegan</span></h1>
+<section id="distancia-euclídea" class="level3">
+<h3 class="anchored" data-anchor-id="distancia-euclídea"><span style="color: #3690c0;">Distancia Euclídea</span></h3>
+<div class="cell">
+<details>
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>d.euclid <span class="ot">&lt;-</span> <span class="fu">vegdist</span>(<span class="fu">scale</span>(insectos[(<span class="dv">4</span><span class="sc">:</span><span class="dv">9</span>)]), <span class="at">method=</span><span class="st">"euclidean"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="distancia-bray-curtis-1" class="level3">
+<h3 class="anchored" data-anchor-id="distancia-bray-curtis-1"><span style="color: #3690c0;">Distancia-Bray Curtis</span></h3>
+<div class="cell">
+<details>
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>d.bray <span class="ot">&lt;-</span> <span class="fu">vegdist</span>((insectos[(<span class="dv">4</span><span class="sc">:</span><span class="dv">9</span>)]), <span class="at">method=</span><span class="st">"bray"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+</section>
+<section id="matrices-de-disimilitud-con-el-paquete-factoexta" class="level1">
+<h1><span style="color: #045a8d;">Matrices de disimilitud con el paquete FactoExta</span></h1>
+<section id="matrices-de-disimilitud-bray-con-el-paquete-factoexta" class="level3">
+<h3 class="anchored" data-anchor-id="matrices-de-disimilitud-bray-con-el-paquete-factoexta"><span style="color: #3690c0;">Matrices de disimilitud bray con el paquete FactoExta</span></h3>
+<div class="cell">
+<details>
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>A1 <span class="ot">&lt;-</span> <span class="fu">vegdist</span>(insectos[<span class="dv">4</span><span class="sc">:</span><span class="dv">8</span>], <span class="at">method=</span><span class="st">"bray"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_dist</span>(<span class="at">dist.obj =</span> d.bray, <span class="at">lab_size =</span> <span class="dv">10</span>, <span class="at">order =</span> <span class="cn">FALSE</span>) <span class="sc">+</span>  </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-fig4" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Seminario_files/figure-html/fig-fig4-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figura&nbsp;3: Matriz de distancia Bray-Curtis de los 5 taxones de insectos. La intensidad del rojo indica el nivel de similitud entre observaciones y la intensidad del azul representa el nivel de distancia o disimilitud.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-fig4">Figura&nbsp;3</a> En este caso encontramos muchas variaciones entre las observaciones, por ejemplo entre la 11 y la 15 en el eje x-y, encontramos un parche rojo que evidencia una gran similitud de los datos, contrario al parche que se forma entre las observaciones de la 20 hasta la 18 en el eje x, asi mismo de la 19 hasta la 17 en el eje y, dónde la disimilitud es mayor, lo que nos indica que estas observaciones a pesar de no corresponder todas a la misma cuenca, muestran similitud entre ellos.</p>
+</section>
+<section id="matrices-de-disimilitud-euclidea-con-el-paquete-factoexta" class="level3">
+<h3 class="anchored" data-anchor-id="matrices-de-disimilitud-euclidea-con-el-paquete-factoexta"><span style="color: #3690c0;">Matrices de disimilitud Euclidea con el paquete FactoExta</span></h3>
+<div class="cell">
+<details>
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">vegdist</span>(insectos[<span class="dv">4</span><span class="sc">:</span><span class="dv">8</span>], <span class="at">method=</span><span class="st">"euclidea"</span>, <span class="at">order =</span> <span class="st">'AOE'</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_dist</span>(<span class="at">dist.obj =</span> d.euclid, <span class="at">lab_size =</span> <span class="dv">10</span>, <span class="at">order =</span> <span class="cn">FALSE</span>) <span class="sc">+</span>  </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-fig5" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Seminario_files/figure-html/fig-fig5-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figura&nbsp;4: Matriz de distancia Euclidea de los 5 taxones de insectos. La intensidad del rojo indica el nivel de similitud entre observaciones y la intensidad del azul representa el nivel de distancia o disimilitud.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>En la <a href="#fig-fig5">Figura&nbsp;4</a> podemos observar patrones entre las cuencas. Por ejemplo, entre la observacion 6 y la 18 en los ejes x-y, sumado a esto, encontramos un parche rojo que evidencia una gran similitud de los datos que corresponden a una misma cuenca, resultado que es esperado debido a que contemplan las mismas condiciones. De igual manera encontramos un parche que se forma entre las observaciones 3-17 tanto el el eje x como en el y, dónde la disimilitud es mayor, perteneciendo a una misma cuenca. En general los resultados evidencia patrones de similitud y disimilitud que van de acuerdo con las observaciones realizadas por cuenca, lo que nos indica que si hay una relación entre el área y las variables registradas en el estudio.</p>
+</section>
+</section>
+<section id="ejemplo-de-un-estudio-de-caso" class="level1">
+<h1><span style="color: #045a8d;">Ejemplo de un estudio de caso</span></h1>
+<section id="aplicando-la-distancia-euclideas" class="level3">
+<h3 class="anchored" data-anchor-id="aplicando-la-distancia-euclideas"><span style="color: #3690c0;">1. Aplicando la distancia euclideas</span></h3>
+<section id="morfometría-comparada-del-aparato-mandibular-en-especies-de-chirostoma-atheriniformes-atherinopsidae-del-lago-de-pátzcuaro-michoacán-méxico" class="level4">
+<h4 class="anchored" data-anchor-id="morfometría-comparada-del-aparato-mandibular-en-especies-de-chirostoma-atheriniformes-atherinopsidae-del-lago-de-pátzcuaro-michoacán-méxico">Morfometría comparada del aparato mandibular en especies de&nbsp;<em>Chirostoma</em>&nbsp;(Atheriniformes: Atherinopsidae) del Lago de Pátzcuaro, Michoacán, México</h4>
+</section>
+<section id="que-hicieron" class="level4">
+<h4 class="anchored" data-anchor-id="que-hicieron">Que hicieron</h4>
+<p>Tomaron el género Chirostoma de peces endémicos de la mesa central de mexico el cual cuya diversificación se da de dos maneras, por procesos de especiación alopátrica en ambientes loticos y por diversificación intralacustre debida a especiación simpátrica. La intención de este articulo es validar la segunda hipótesis evaluando las diferencias osteológicas de la mandíbula de unas especies de este género (<em>C. attenuatum</em>, <em>C. grandocule</em>, <em>C. estor</em> y <em>C. patzcuar).</em></p>
+</section>
+<section id="como-incorpararon-la-distancia-euclidea" class="level4">
+<h4 class="anchored" data-anchor-id="como-incorpararon-la-distancia-euclidea">Como incorpararon la distancia Euclidea</h4>
+<p>Luego de la identificación de 20 individuos adultos de cada una de las especies a los cuales se les tomaron fotografías de los huesos desarticulados y se midieron cada uno de los huesos utilizando un vernier electrónico con una precisión de 0.01 mm. Para la comparación de estos se realizó un análisis de agrupamiento utilizando valores sacados de una matriz de distancia euclidiana para realizar un dendograma&nbsp; el cual fue estructurado con el método de unión media no ponderada (UPGMA) con la intención de observar las semejanzas entre las especies.</p>
+</section>
+<section id="resultados" class="level4">
+<h4 class="anchored" data-anchor-id="resultados">Resultados</h4>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://www.scielo.org.mx/img/revistas/hbio/v15n2/a5f2.jpg" class="img-fluid figure-img" width="535"></p>
+</figure>
+</div>
+<p>Tomado de: Soria y Paulo 2005.</p>
+<p>El análisis muestra 4 grupos claramente formados. Que son las especies con la se estaban trabajando, El primero contiene a los individuos de <em>C. grandocule</em>, que se relacionan con un valor de disimilitud de 62.8 con los de <em>C. patzcuaro</em>. Ambos taxones, a su vez, se unen con el tercer grupo formado por los ejemplares de <em>C. estor</em>, con un valor de 67.2. El taxón que a continuación se relaciona es <em>C. attenuatum</em>, unido con 80.8 unidades de disimilitud (Fig. 2).</p>
+</section>
+</section>
+<section id="aplicando-la-distancia-bray" class="level3">
+<h3 class="anchored" data-anchor-id="aplicando-la-distancia-bray"><span style="color: #3690c0;">2. Aplicando la Distancia-Bray</span></h3>
+<section id="cambio-temporal-en-la-estructura-de-la-comunidad-coralina-del-área-de-santa-marta-parque-nacional-natural-tayrona-caribe-colombiano" class="level4">
+<h4 class="anchored" data-anchor-id="cambio-temporal-en-la-estructura-de-la-comunidad-coralina-del-área-de-santa-marta-parque-nacional-natural-tayrona-caribe-colombiano">CAMBIO TEMPORAL EN LA ESTRUCTURA DE LA COMUNIDAD CORALINA DEL ÁREA DE SANTA MARTA – PARQUE NACIONAL NATURAL TAYRONA (CARIBE COLOMBIANO)</h4>
+</section>
+<section id="que-hicieron-1" class="level4">
+<h4 class="anchored" data-anchor-id="que-hicieron-1">Que hicieron</h4>
+<p>En este articulo buscaron demostrado cuantitativamente los cambios de magnitud y dirección en las estructuras coralinas de cuatro arrecifes del Caribe colombiano, dos del área de Santa Marta: Punta Betín (PB) e isla Morro Grande (MO) y dos en el Parque Nacional Natural Tayrona (PNNT): ensenada de Granate (GR) y bahía Gayraca (GA). Entre 1989 y 2002.</p>
+</section>
+<section id="como-incorpararon-la-distancia-bray" class="level4">
+<h4 class="anchored" data-anchor-id="como-incorpararon-la-distancia-bray">Como incorpararon la Distancia-Bray</h4>
+<p>Con de objetivo de comparar la estructura de los ocho arrecifes en el pasado vs presente (4 en el pasado y 4 en el presente), se realizó un análisis exploratorio de clasificación normal mediante un cluster de similaridad de Bray-Curtis, utilizando la técnica de ligamiento de promedio de grupos.</p>
+</section>
+<section id="resultados-1" class="level4">
+<h4 class="anchored" data-anchor-id="resultados-1">Resultados</h4>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="http://www.scielo.org.co/img/revistas/mar/v34n1/v34n1a08fig9.gif" class="img-fluid figure-img" width="526"></p>
+</figure>
+</div>
+<p>Tomado de: Martines y Acosta 2005.</p>
+<p>Encontraron que en general la estructura de las comunidades para todos y cada uno de los arrecifes mantuvo una similaridad superior al 50 %, la estructura de la comunidad coralina en el arrecife de Morro Grande fue la que menos cambió en el tiempo, seguida por las comunidades de Punta Betín y Granate. Por el contrario, la estructura de la comunidad coralina en Gayraca fue la que presentó un mayor cambio en el tiempo ya que no se agruparon los arrecifes de 1992 y 2002 entre sí, sino que la estructura de la comunidad coralina de Gayraca en 1992 resultó más similar a Punta Betín y Morro; y en el 2002 a Granate.</p>
+</section>
+</section>
+</section>
+<section id="bibliografía" class="level1">
+<h1><span style="color: #045a8d;">Bibliografía</span></h1>
+<p>Bray, JR y Curtis, JT (1957) Una ordenación de las comunidades de los bosques de tierras altas del sur de Wisconsin. Monografías ecológicas, 27, 325-349.<br>
+<a href="http://dx.doi.org/10.2307/1942268" class="uri">http://dx.doi.org/10.2307/1942268</a></p>
+<p>Cajal, A. Distancia euclidiana: concepto, fórmula, cálculo, ejemplo. lifeder. Recuperado el 03/05/2024 a partir de: <a href="#0">https://www.lifeder.com/distancia-euclidiana/</a></p>
+<p>Espinosa, C.I. 2022. Capítulo 4 Distancias entre sitios. Similitud de Comunidades biológicas. <a href="https://ciespinosa.github.io/Similitud/distancias-entre-sitios.html#distancia-euclidiana" class="uri">https://ciespinosa.github.io/Similitud/distancias-entre-sitios.html#distancia-euclidiana</a></p>
+<p>Martínez, S., &amp; Acosta, A. (2005). Cambio temporal en la estructura de la comunidad coralina del área de Santa Marta-Parque Nacional Natural Tayrona (Caribe colombiano).&nbsp;<em>Boletín de Investigaciones Marinas y Costeras-INVEMAR</em>,&nbsp;<em>34</em>(1), 161-191.</p>
+<p>Rodríguez-Barrios, J. (2022). Análisis de datos ecológicos y ambientales: aplicaciones con programa R. Ediciones Díaz de Santos.<a href="https://www-ebooks7-24-com.biblioteca.unimagdalena.edu.co/?il=26489" class="uri">https://www-ebooks7-24-com.biblioteca.unimagdalena.edu.co/?il=26489</a></p>
+<p>Rojas-Jimenez, K. 2022. Capítulo 6 Análisis de Cluster, Mapas de Calor y Análisis Multivariados. Ciencia de Datos para Ciencias Naturales. <a href="https://bookdown.org/keilor_rojas/CienciaDatos/an%C3%A1lisis-de-cluster-mapas-de-calor-y-an%C3%A1lisis-multivariados.html" class="uri">https://bookdown.org/keilor_rojas/CienciaDatos/an%C3%A1lisis-de-cluster-mapas-de-calor-y-an%C3%A1lisis-multivariados.html</a></p>
+<p>Soria-Barreto M. y J. Paulo-Maya. 2005. Morfometría comparada del aparato mandibular en especies de Chirostoma (Atheriniformes : Atherinopsidae) del Lago de Pátzcuaro, Michoacán, México. Hidrobiológica 15 (2 Especial): 161-168.</p>
+<style> 
+body { text-align: justify} 
+</style>
+<!-- -->
+
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Ejecutar el código</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb13" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Seminario-Introducción al modo Q"</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Diferencias entre Distancias Métricas, Semi-métricas y no métricas: Euclídea y Bray Curtis."</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Desarrollo del seminario: coeficientes y distancias de similitud enfocado en el modo Q distancias D1 Y D14, se presentan la explicacion matematica, aplicacion el programa r y ejmplos de investigaciones donde se utilicen estas distancias."</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Manuel L. Eestupiñan-Owen, Yeison Garcia, Paola peralta"</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="an">title-block-banner:</span><span class="co"> "#a6bddb"</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="an">lang:</span><span class="co"> "es-ES"</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: True</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-title: Tabla de contenido</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-depth: 4</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co">    theme: Spacelab</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="an">bibliography:</span><span class="co"> references.bib</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="an">csl:</span><span class="co"> apa (1).csl</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="an">source:</span><span class="co"> </span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co"> quarto-pub:</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="fu"># [Librerias]{style="color: #045a8d;"}</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="in">```{r,warning=FALSE,message=FALSE}</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vegan)</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a><span class="fu"># [Modo Q coeficientes de distancia]{style="color: #045a8d;"}</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a><span class="fu">### [Distancia métricas]{style="color: #3690c0;"}</span></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>En el modo Q, los coeficientes miden la distancia o similitud entre parejas de objetos (ej. distancia euclídea o el coeficiente de similitud de Jaccard). Estos alcanzan su valor máximo cuando los objetos son completamente distintos o cuando son iguales a cero.</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>Los coeficientes se pueden clasificar en:</span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>Las distancias métricas son usadas para datos cuantitativos, bajo las siguientes propiedades</span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Si a = b, entonces D(a,b) = 0</span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Si a ≠ b, entonces D(a,b) <span class="sc">\&gt;</span> 0</span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>D(a,b) = D(b,a)</span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>D(a,b) + D(b,a) <span class="sc">\&gt;</span> D(a, c)</span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>Esta última propiedad se conoce como el axioma del triángulo no equilátero, indica que la suma de dos lados de un triángulo en un espacio euclídeo es necesariamente iguales o mayor que el tercer lado.</span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a><span class="fu">### [Distancia semimetrica]{style="color: #3690c0;"}</span></span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>En el segundo grupo se encuentran las simétricas las cuales no cumplen el axioma (4) por lo que los autovalores se afectan en una matriz de covarianza. Legendre y Legendre (1983) afirman que algunas de las medidas de distancia obtenidas por medio del complemento de las similitudes S~1~-S~23~ no siguen la cuarta propiedad de las medidas métricas, ya que no satisfacen el axioma del triángulo.</span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a><span class="fu">### [Distancias no métrico]{style="color: #3690c0;"}</span></span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a>Estas pueden presentar valores negativos violando la propiedad de positividad de una distancia métrica.</span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a><span class="fu"># [Distancia euclidiana]{style="color: #045a8d;"}</span></span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a>La distancia euclidiana entre dos sitios es representa la longitud del vector que conecta los sitios. Es la distancia más conocida entre las métricas pudiendo calcularse por medio del teorema de Pitágoras (Legendre y Legendre, 1983). Los objetos son posicionados de acuerdo con los valores que toma cada variable en un espacio p-dimencional. Esto es, para datos continuos y respecto a cualquier atributo dado, la distancia euclidiana entre los datos de dos muestras es \|y~i1~ - y~i2~\| donde y~i1~ es el valor de una muestra y y~i2~ es el valor de la segunda muestra (Clifford y Stiphenson, 1975). Para n muestras. La distancia euclidiana no tiene límite superior, se incrementa según aumenta el número de variables. Su valor solo depende de la escala de cada variable, aunque también se pueden cambiar la escala de algunas variables obteniendo medidas de distancia (Legendre y Legendre, 1983). Si existen solo existen dos variables esta expresión llega a ser la medida de la hipotenusa del ángulo recto del triángulo (Legendre y Legendre, 1983).</span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a><span class="al">![Ecuación para la distancia Euclidiana.](euclidea.png)</span>{#fig-Figura1 fig-align="center"}</span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a>@fig-Figura1 Donde **X~1~**, es la muestra 1; **X~2~** es la muestra 2; **y~i1~** es el valor de la variable en la muestra 1; **y~i2~** es el valor de la variable en la muestra 2 y **n** es el número de variables (Rodríguez-Barrios, J. 2023).</span>
+<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a><span class="al">![La distancia entre dos puntos P y Q del plano cumple el teorema de Pitágoras. (Elaborado por Ricardo Pérez).](https://www.lifeder.com/wp-content/uploads/2019/11/Distancia-2-644x420.jpg)</span>{#fig-Figura2 fig-align="center" width="480"}</span>
+<span id="cb13-65"><a href="#cb13-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-66"><a href="#cb13-66" aria-hidden="true" tabindex="-1"></a>@fig-Figura2 Donde **X~Q~** y **Y~Q~** son las cordenadas (x,y) del punto Q; **X~P~** y **Y~P~** son las cordenadas (x,y) del punto P.</span>
+<span id="cb13-67"><a href="#cb13-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-68"><a href="#cb13-68" aria-hidden="true" tabindex="-1"></a>La distancia euclidiana como una medida de la semejanza entre muestras está fuertemente impactada por la diferencia entre las abundancias de especies, esto puede causar una paradoja: dos muestras sin ninguna especie en común puede llegar a tener una distancia más pequeña que dos muestras que contengan la misma especie (Legendre y Legendre, 1983). Por lo tanto, la distancia euclidiana no debe ser utilizada cuando se trabaja con comparaciones basadas en la abundancia de especies (Legendre y Legendre, 1983).</span>
+<span id="cb13-69"><a href="#cb13-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-70"><a href="#cb13-70" aria-hidden="true" tabindex="-1"></a><span class="fu">### [Efecto de doble cero]{style="color: #3690c0;"}</span></span>
+<span id="cb13-71"><a href="#cb13-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-72"><a href="#cb13-72" aria-hidden="true" tabindex="-1"></a>El doble cero puede contribuir a la reducción de la distancia, esto puede evitarse cuando se trabaja con variables de abundancia de especies, mientras que en el caso de las variables físicas el doble cero puede ser una base validad para la comparación de muestras. Aunque la distancia Euclidiana es la más conocida entre las distancias métricas, no es apropiado utilizarla en análisis de datos biológicos como la abundancia, en general en la naturaleza las relaciones lineales no son muy comunes por lo es necesario aplicar trasformaciones sin embargo en muchos casos no son efectivas. En los datos biológicos es normal encontrar una gran cantidad de ceros (especies no encontradas en determinados sitios), el problema es que la distancia Euclidiana incrementa la similitud entre comunidades que presentan ceros para la misma especie. En este caso, el tener un valor de cero puede deberse a varias razones, por ejemplo puede ser que aunque la especie ocurre en ese lugar no pudo ser muestreada por otro lado cuando se trabaja con datos abióticos normalmente el cero implica la ausencia de alguna variable , por ejemplo tener cero mg de un contaminante es una información valida.</span>
+<span id="cb13-73"><a href="#cb13-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-76"><a href="#cb13-76" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-77"><a href="#cb13-77" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear un data frame con 6 especies</span></span>
+<span id="cb13-78"><a href="#cb13-78" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb13-79"><a href="#cb13-79" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb13-80"><a href="#cb13-80" aria-hidden="true" tabindex="-1"></a>  <span class="at">sp1 =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>),</span>
+<span id="cb13-81"><a href="#cb13-81" aria-hidden="true" tabindex="-1"></a>  <span class="at">sp2 =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb13-82"><a href="#cb13-82" aria-hidden="true" tabindex="-1"></a>  <span class="at">sp3 =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb13-83"><a href="#cb13-83" aria-hidden="true" tabindex="-1"></a>  <span class="at">sp4 =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb13-84"><a href="#cb13-84" aria-hidden="true" tabindex="-1"></a>  <span class="at">sp5 =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>),</span>
+<span id="cb13-85"><a href="#cb13-85" aria-hidden="true" tabindex="-1"></a>  <span class="at">sp6 =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>)</span>
+<span id="cb13-86"><a href="#cb13-86" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb13-87"><a href="#cb13-87" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(datos) <span class="ot">&lt;-</span> LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]</span>
+<span id="cb13-88"><a href="#cb13-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-89"><a href="#cb13-89" aria-hidden="true" tabindex="-1"></a><span class="co"># Titulo del data frame</span></span>
+<span id="cb13-90"><a href="#cb13-90" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(datos, <span class="at">caption =</span> <span class="st">"Efecto del doble cero"</span>)</span>
+<span id="cb13-91"><a href="#cb13-91" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-92"><a href="#cb13-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-95"><a href="#cb13-95" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-96"><a href="#cb13-96" aria-hidden="true" tabindex="-1"></a><span class="co"># Distancia euclidia para las 6 especies</span></span>
+<span id="cb13-97"><a href="#cb13-97" aria-hidden="true" tabindex="-1"></a><span class="fu">vegdist</span>(datos, <span class="st">"euclidean"</span>)</span>
+<span id="cb13-98"><a href="#cb13-98" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-99"><a href="#cb13-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-100"><a href="#cb13-100" aria-hidden="true" tabindex="-1"></a>Según la matriz de distancia las 3 comunidades son muy similares. En el caso de la comunidad A y C no se presenta ninguna especie en común sin embargo la matriz indica una alta similaridad entre ellas esto debido al efecto del doble cero.</span>
+<span id="cb13-101"><a href="#cb13-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-102"><a href="#cb13-102" aria-hidden="true" tabindex="-1"></a><span class="fu">### [Efecto de la abundancia en la distancia Euclídea]{style="color: #3690c0;"}</span></span>
+<span id="cb13-103"><a href="#cb13-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-104"><a href="#cb13-104" aria-hidden="true" tabindex="-1"></a>Otra situación que es muy común con los datos de abundancia es que se presenten especies muy dominantes. La distancia euclídea eleva al cuadrado las abundancias, en consecuencia, incrementa el efecto de las especies dominantes.</span>
+<span id="cb13-105"><a href="#cb13-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-108"><a href="#cb13-108" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-109"><a href="#cb13-109" aria-hidden="true" tabindex="-1"></a><span class="co"># Data fren con 3 especies</span></span>
+<span id="cb13-110"><a href="#cb13-110" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb13-111"><a href="#cb13-111" aria-hidden="true" tabindex="-1"></a>datos1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">spp1=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>),<span class="at">spp2=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">8</span>),</span>
+<span id="cb13-112"><a href="#cb13-112" aria-hidden="true" tabindex="-1"></a>                    <span class="at">spp3=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">7</span>))</span>
+<span id="cb13-113"><a href="#cb13-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-114"><a href="#cb13-114" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(datos1) <span class="ot">&lt;-</span> LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]</span>
+<span id="cb13-115"><a href="#cb13-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-116"><a href="#cb13-116" aria-hidden="true" tabindex="-1"></a><span class="co"># Titulo del data frame</span></span>
+<span id="cb13-117"><a href="#cb13-117" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(datos1, <span class="at">caption =</span> <span class="st">"Efecto de la abundancia"</span>)</span>
+<span id="cb13-118"><a href="#cb13-118" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-119"><a href="#cb13-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-122"><a href="#cb13-122" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-123"><a href="#cb13-123" aria-hidden="true" tabindex="-1"></a><span class="co"># Distancia euclidia para las 3 especies</span></span>
+<span id="cb13-124"><a href="#cb13-124" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vegan)</span>
+<span id="cb13-125"><a href="#cb13-125" aria-hidden="true" tabindex="-1"></a><span class="fu">vegdist</span>(datos1, <span class="st">"euclidean"</span>)</span>
+<span id="cb13-126"><a href="#cb13-126" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-127"><a href="#cb13-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-128"><a href="#cb13-128" aria-hidden="true" tabindex="-1"></a>Las comunidades A y C comparten dos especies mientras que A y B, B y C comparten tan solo una especie, sin embargo, la distancia entre A y B es menor (1.73) que la distancia entre A y C (9.21) debido al efecto de la abundancia. En otras palabras, dos comunidades pueden parecer más disimiles de lo que en realidad son cuando existe una gran diferencia en la abundancia de las especies que comparten.</span>
+<span id="cb13-129"><a href="#cb13-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-130"><a href="#cb13-130" aria-hidden="true" tabindex="-1"></a><span class="fu">### [Distancia euclidiana modificada]{style="color: #3690c0;"}</span></span>
+<span id="cb13-131"><a href="#cb13-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-132"><a href="#cb13-132" aria-hidden="true" tabindex="-1"></a>Legendre y Legendre (1983) mencionan que en el caso de las abundancias de especies se han propuesto diversas modificaciones a la distancia euclidiana para tratar de solucionar la desventaja que este presenta.</span>
+<span id="cb13-133"><a href="#cb13-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-134"><a href="#cb13-134" aria-hidden="true" tabindex="-1"></a><span class="fu"># [Distancia Bray-Curtis]{style="color: #045a8d;"}</span></span>
+<span id="cb13-135"><a href="#cb13-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-136"><a href="#cb13-136" aria-hidden="true" tabindex="-1"></a>La Distancia-Bray-Curtis se refiere a la diferencia total en la abundancia de especies entre dos sitios, dividido para la abundancia total en cada sitio. &nbsp;Esta distancia se centra en la abundancia relativa de las especies, además los valores que esta presenta va de 0 a 1 (Bray y Curtis, 1957; Espinosa, 2019).</span>
+<span id="cb13-137"><a href="#cb13-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-138"><a href="#cb13-138" aria-hidden="true" tabindex="-1"></a>Algunas ventajas de usar Bray-Curtis son las siguientes:</span>
+<span id="cb13-139"><a href="#cb13-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-140"><a href="#cb13-140" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Dos muestras iguales toman el valor 1.</span>
+<span id="cb13-141"><a href="#cb13-141" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Cuando no hay especies en común el valor es 0.</span>
+<span id="cb13-142"><a href="#cb13-142" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>No es afectado por los cambios en las unidades de medida.</span>
+<span id="cb13-143"><a href="#cb13-143" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>No es afectado por las muestras (especies) ausentes.</span>
+<span id="cb13-144"><a href="#cb13-144" aria-hidden="true" tabindex="-1"></a><span class="ss">5.  </span>No es afectado por el tamaño de muestras.</span>
+<span id="cb13-145"><a href="#cb13-145" aria-hidden="true" tabindex="-1"></a><span class="ss">6.  </span>Detecta diferencias en abundancia total cuando las abundancias relativas son idénticas.</span>
+<span id="cb13-146"><a href="#cb13-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-147"><a href="#cb13-147" aria-hidden="true" tabindex="-1"></a>Existen otras formas de medir distancias entre dos localidades. En ecología una de las distancias más utilizada es la de Bray-Curtis, esta distancia es el opuesto del porcentaje de similitud. Calculada de la siguiente forma:</span>
+<span id="cb13-148"><a href="#cb13-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-149"><a href="#cb13-149" aria-hidden="true" tabindex="-1"></a><span class="al">![](bray.png)</span>{#fig-Figura3 fig-align="center"}</span>
+<span id="cb13-150"><a href="#cb13-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-151"><a href="#cb13-151" aria-hidden="true" tabindex="-1"></a>Dónde **ai** representa la abundancia o presencia de una especie **i** en el conjunto de datos; bi, representa la abundancia o presencia de una especie **i** en el conjunto de datos; Σ, representa la suma de todos los valores para cada especie en ambos conjuntos de datos.</span>
+<span id="cb13-152"><a href="#cb13-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-153"><a href="#cb13-153" aria-hidden="true" tabindex="-1"></a>La distancia Bray-Curtis resulta más intuitiva porque las especies comunes y raras tienen pesos relativamente similares, mientras que la distancia euclidiana depende de las especies más abundantes. Esto sucede porque las distancias euclidianas se basan en diferencias al cuadrado, mientras que Bray-Curtis utiliza diferencias absolutas.</span>
+<span id="cb13-154"><a href="#cb13-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-155"><a href="#cb13-155" aria-hidden="true" tabindex="-1"></a><span class="fu"># [Base de datos]{style="color: #045a8d;"}</span></span>
+<span id="cb13-156"><a href="#cb13-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-157"><a href="#cb13-157" aria-hidden="true" tabindex="-1"></a><span class="in">```{r,warning=FALSE,message=FALSE}</span></span>
+<span id="cb13-158"><a href="#cb13-158" aria-hidden="true" tabindex="-1"></a>insectos <span class="ot">&lt;-</span><span class="fu">read.csv2</span>(<span class="st">"Insectos.csv"</span>,<span class="at">row.names=</span><span class="dv">1</span>)</span>
+<span id="cb13-159"><a href="#cb13-159" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-160"><a href="#cb13-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-161"><a href="#cb13-161" aria-hidden="true" tabindex="-1"></a><span class="fu"># [Calculo de las distancias Euclídea D1 Y Bray Curtis D14 con el paquete Vegan]{style="color: #045a8d;"}</span></span>
+<span id="cb13-162"><a href="#cb13-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-163"><a href="#cb13-163" aria-hidden="true" tabindex="-1"></a><span class="fu">### [Distancia Euclídea]{style="color: #3690c0;"}</span></span>
+<span id="cb13-164"><a href="#cb13-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-165"><a href="#cb13-165" aria-hidden="true" tabindex="-1"></a><span class="in">```{r,warning=FALSE,message=FALSE}</span></span>
+<span id="cb13-166"><a href="#cb13-166" aria-hidden="true" tabindex="-1"></a>d.euclid <span class="ot">&lt;-</span> <span class="fu">vegdist</span>(<span class="fu">scale</span>(insectos[(<span class="dv">4</span><span class="sc">:</span><span class="dv">9</span>)]), <span class="at">method=</span><span class="st">"euclidean"</span>)</span>
+<span id="cb13-167"><a href="#cb13-167" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-168"><a href="#cb13-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-169"><a href="#cb13-169" aria-hidden="true" tabindex="-1"></a><span class="fu">### [Distancia-Bray Curtis]{style="color: #3690c0;"}</span></span>
+<span id="cb13-170"><a href="#cb13-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-171"><a href="#cb13-171" aria-hidden="true" tabindex="-1"></a><span class="in">```{r,warning=FALSE,message=FALSE}</span></span>
+<span id="cb13-172"><a href="#cb13-172" aria-hidden="true" tabindex="-1"></a>d.bray <span class="ot">&lt;-</span> <span class="fu">vegdist</span>((insectos[(<span class="dv">4</span><span class="sc">:</span><span class="dv">9</span>)]), <span class="at">method=</span><span class="st">"bray"</span>)</span>
+<span id="cb13-173"><a href="#cb13-173" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-174"><a href="#cb13-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-175"><a href="#cb13-175" aria-hidden="true" tabindex="-1"></a><span class="fu"># [Matrices de disimilitud con el paquete FactoExta]{style="color: #045a8d;"}</span></span>
+<span id="cb13-176"><a href="#cb13-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-177"><a href="#cb13-177" aria-hidden="true" tabindex="-1"></a><span class="fu">### [Matrices de disimilitud bray con el paquete FactoExta]{style="color: #3690c0;"}</span></span>
+<span id="cb13-178"><a href="#cb13-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-179"><a href="#cb13-179" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, warning=FALSE,message=FALSE}</span></span>
+<span id="cb13-180"><a href="#cb13-180" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-fig4</span></span>
+<span id="cb13-181"><a href="#cb13-181" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: Matriz de distancia Bray-Curtis de los 5 taxones de insectos. La intensidad del rojo indica el nivel de similitud entre observaciones y la intensidad del azul representa el nivel de distancia o disimilitud.</span></span>
+<span id="cb13-182"><a href="#cb13-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-183"><a href="#cb13-183" aria-hidden="true" tabindex="-1"></a>A1 <span class="ot">&lt;-</span> <span class="fu">vegdist</span>(insectos[<span class="dv">4</span><span class="sc">:</span><span class="dv">8</span>], <span class="at">method=</span><span class="st">"bray"</span>)</span>
+<span id="cb13-184"><a href="#cb13-184" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_dist</span>(<span class="at">dist.obj =</span> d.bray, <span class="at">lab_size =</span> <span class="dv">10</span>, <span class="at">order =</span> <span class="cn">FALSE</span>) <span class="sc">+</span>  </span>
+<span id="cb13-185"><a href="#cb13-185" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb13-186"><a href="#cb13-186" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-187"><a href="#cb13-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-188"><a href="#cb13-188" aria-hidden="true" tabindex="-1"></a>@fig-fig4 En este caso encontramos muchas variaciones entre las observaciones, por ejemplo entre la 11 y la 15 en el eje x-y, encontramos un parche rojo que evidencia una gran similitud de los datos, contrario al parche que se forma entre las observaciones de la 20 hasta la 18 en el eje x, asi mismo de la 19 hasta la 17 en el eje y, dónde la disimilitud es mayor, lo que nos indica que estas observaciones a pesar de no corresponder todas a la misma cuenca, muestran similitud entre ellos.</span>
+<span id="cb13-189"><a href="#cb13-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-190"><a href="#cb13-190" aria-hidden="true" tabindex="-1"></a><span class="fu">### [Matrices de disimilitud Euclidea con el paquete FactoExta]{style="color: #3690c0;"}</span></span>
+<span id="cb13-191"><a href="#cb13-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-192"><a href="#cb13-192" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, warning=FALSE,message=FALSE}</span></span>
+<span id="cb13-193"><a href="#cb13-193" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-fig5</span></span>
+<span id="cb13-194"><a href="#cb13-194" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: Matriz de distancia Euclidea de los 5 taxones de insectos. La intensidad del rojo indica el nivel de similitud entre observaciones y la intensidad del azul representa el nivel de distancia o disimilitud.</span></span>
+<span id="cb13-195"><a href="#cb13-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-196"><a href="#cb13-196" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">vegdist</span>(insectos[<span class="dv">4</span><span class="sc">:</span><span class="dv">8</span>], <span class="at">method=</span><span class="st">"euclidea"</span>, <span class="at">order =</span> <span class="st">'AOE'</span>)</span>
+<span id="cb13-197"><a href="#cb13-197" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_dist</span>(<span class="at">dist.obj =</span> d.euclid, <span class="at">lab_size =</span> <span class="dv">10</span>, <span class="at">order =</span> <span class="cn">FALSE</span>) <span class="sc">+</span>  </span>
+<span id="cb13-198"><a href="#cb13-198" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb13-199"><a href="#cb13-199" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-200"><a href="#cb13-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-201"><a href="#cb13-201" aria-hidden="true" tabindex="-1"></a>En la @fig-fig5 podemos observar patrones entre las cuencas. Por ejemplo, entre la observacion 6 y la 18 en los ejes x-y, sumado a esto, encontramos un parche rojo que evidencia una gran similitud de los datos que corresponden a una misma cuenca, resultado que es esperado debido a que contemplan las mismas condiciones. De igual manera encontramos un parche que se forma entre las observaciones 3-17 tanto el el eje x como en el y, dónde la disimilitud es mayor, perteneciendo a una misma cuenca. En general los resultados evidencia patrones de similitud y disimilitud que van de acuerdo con las observaciones realizadas por cuenca, lo que nos indica que si hay una relación entre el área y las variables registradas en el estudio.</span>
+<span id="cb13-202"><a href="#cb13-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-203"><a href="#cb13-203" aria-hidden="true" tabindex="-1"></a><span class="fu"># [Ejemplo de un estudio de caso]{style="color: #045a8d;"}</span></span>
+<span id="cb13-204"><a href="#cb13-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-205"><a href="#cb13-205" aria-hidden="true" tabindex="-1"></a><span class="fu">### [1. Aplicando la distancia euclideas]{style="color: #3690c0;"}</span></span>
+<span id="cb13-206"><a href="#cb13-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-207"><a href="#cb13-207" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Morfometría comparada del aparato mandibular en especies de&nbsp;*Chirostoma*&nbsp;(Atheriniformes: Atherinopsidae) del Lago de Pátzcuaro, Michoacán, México</span></span>
+<span id="cb13-208"><a href="#cb13-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-209"><a href="#cb13-209" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Que hicieron</span></span>
+<span id="cb13-210"><a href="#cb13-210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-211"><a href="#cb13-211" aria-hidden="true" tabindex="-1"></a>Tomaron el género Chirostoma de peces endémicos de la mesa central de mexico el cual cuya diversificación se da de dos maneras, por procesos de especiación alopátrica en ambientes loticos y por diversificación intralacustre debida a especiación simpátrica. La intención de este articulo es validar la segunda hipótesis evaluando las diferencias osteológicas de la mandíbula de unas especies de este género (*C. attenuatum*, *C. grandocule*, *C. estor* y *C. patzcuar).*</span>
+<span id="cb13-212"><a href="#cb13-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-213"><a href="#cb13-213" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Como incorpararon la distancia Euclidea</span></span>
+<span id="cb13-214"><a href="#cb13-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-215"><a href="#cb13-215" aria-hidden="true" tabindex="-1"></a>Luego de la identificación de 20 individuos adultos de cada una de las especies a los cuales se les tomaron fotografías de los huesos desarticulados y se midieron cada uno de los huesos utilizando un vernier electrónico con una precisión de 0.01 mm. Para la comparación de estos se realizó un análisis de agrupamiento utilizando valores sacados de una matriz de distancia euclidiana para realizar un dendograma&nbsp; el cual fue estructurado con el método de unión media no ponderada (UPGMA) con la intención de observar las semejanzas entre las especies.</span>
+<span id="cb13-216"><a href="#cb13-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-217"><a href="#cb13-217" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Resultados</span></span>
+<span id="cb13-218"><a href="#cb13-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-219"><a href="#cb13-219" aria-hidden="true" tabindex="-1"></a><span class="al">![](https://www.scielo.org.mx/img/revistas/hbio/v15n2/a5f2.jpg)</span>{fig-align="center" width="535"}</span>
+<span id="cb13-220"><a href="#cb13-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-221"><a href="#cb13-221" aria-hidden="true" tabindex="-1"></a>Tomado de: Soria y Paulo 2005.</span>
+<span id="cb13-222"><a href="#cb13-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-223"><a href="#cb13-223" aria-hidden="true" tabindex="-1"></a>El análisis muestra 4 grupos claramente formados. Que son las especies con la se estaban trabajando, El primero contiene a los individuos de *C. grandocule*, que se relacionan con un valor de disimilitud de 62.8 con los de *C. patzcuaro*. Ambos taxones, a su vez, se unen con el tercer grupo formado por los ejemplares de *C. estor*, con un valor de 67.2. El taxón que a continuación se relaciona es *C. attenuatum*, unido con 80.8 unidades de disimilitud (Fig. 2).</span>
+<span id="cb13-224"><a href="#cb13-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-225"><a href="#cb13-225" aria-hidden="true" tabindex="-1"></a><span class="fu">### [2. Aplicando la Distancia-Bray]{style="color: #3690c0;"}</span></span>
+<span id="cb13-226"><a href="#cb13-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-227"><a href="#cb13-227" aria-hidden="true" tabindex="-1"></a><span class="fu">#### CAMBIO TEMPORAL EN LA ESTRUCTURA DE LA COMUNIDAD CORALINA DEL ÁREA DE SANTA MARTA – PARQUE NACIONAL NATURAL TAYRONA (CARIBE COLOMBIANO)</span></span>
+<span id="cb13-228"><a href="#cb13-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-229"><a href="#cb13-229" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Que hicieron</span></span>
+<span id="cb13-230"><a href="#cb13-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-231"><a href="#cb13-231" aria-hidden="true" tabindex="-1"></a>En este articulo buscaron demostrado cuantitativamente los cambios de magnitud y dirección en las estructuras coralinas de cuatro arrecifes del Caribe colombiano, dos del área de Santa Marta: Punta Betín (PB) e isla Morro Grande (MO) y dos en el Parque Nacional Natural Tayrona (PNNT): ensenada de Granate (GR) y bahía Gayraca (GA). Entre 1989 y 2002.</span>
+<span id="cb13-232"><a href="#cb13-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-233"><a href="#cb13-233" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Como incorpararon la Distancia-Bray</span></span>
+<span id="cb13-234"><a href="#cb13-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-235"><a href="#cb13-235" aria-hidden="true" tabindex="-1"></a>Con de objetivo de comparar la estructura de los ocho arrecifes en el pasado vs presente (4 en el pasado y 4 en el presente), se realizó un análisis exploratorio de clasificación normal mediante un cluster de similaridad de Bray-Curtis, utilizando la técnica de ligamiento de promedio de grupos.</span>
+<span id="cb13-236"><a href="#cb13-236" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-237"><a href="#cb13-237" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Resultados</span></span>
+<span id="cb13-238"><a href="#cb13-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-239"><a href="#cb13-239" aria-hidden="true" tabindex="-1"></a><span class="al">![](http://www.scielo.org.co/img/revistas/mar/v34n1/v34n1a08fig9.gif)</span>{fig-align="center" width="526"}</span>
+<span id="cb13-240"><a href="#cb13-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-241"><a href="#cb13-241" aria-hidden="true" tabindex="-1"></a>Tomado de: Martines y Acosta 2005.</span>
+<span id="cb13-242"><a href="#cb13-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-243"><a href="#cb13-243" aria-hidden="true" tabindex="-1"></a>Encontraron que en general la estructura de las comunidades para todos y cada uno de los arrecifes mantuvo una similaridad superior al 50 %, la estructura de la comunidad coralina en el arrecife de Morro Grande fue la que menos cambió en el tiempo, seguida por las comunidades de Punta Betín y Granate. Por el contrario, la estructura de la comunidad coralina en Gayraca fue la que presentó un mayor cambio en el tiempo ya que no se agruparon los arrecifes de 1992 y 2002 entre sí, sino que la estructura de la comunidad coralina de Gayraca en 1992 resultó más similar a Punta Betín y Morro; y en el 2002 a Granate.</span>
+<span id="cb13-244"><a href="#cb13-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-245"><a href="#cb13-245" aria-hidden="true" tabindex="-1"></a><span class="fu"># [Bibliografía]{style="color: #045a8d;"}</span></span>
+<span id="cb13-246"><a href="#cb13-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-247"><a href="#cb13-247" aria-hidden="true" tabindex="-1"></a>Bray, JR y Curtis, JT (1957) Una ordenación de las comunidades de los bosques de tierras altas del sur de Wisconsin. Monografías ecológicas, 27, 325-349.\</span>
+<span id="cb13-248"><a href="#cb13-248" aria-hidden="true" tabindex="-1"></a><span class="ot">&lt;http://dx.doi.org/10.2307/1942268&gt;</span></span>
+<span id="cb13-249"><a href="#cb13-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-250"><a href="#cb13-250" aria-hidden="true" tabindex="-1"></a>Cajal, A. Distancia euclidiana: concepto, fórmula, cálculo, ejemplo. lifeder. Recuperado el 03/05/2024 a partir de: <span class="co">[</span><span class="ot">https://www.lifeder.com/distancia-euclidiana/</span><span class="co">](#0)</span></span>
+<span id="cb13-251"><a href="#cb13-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-252"><a href="#cb13-252" aria-hidden="true" tabindex="-1"></a>Espinosa, C.I. 2022. Capítulo 4 Distancias entre sitios. Similitud de Comunidades biológicas. <span class="ot">&lt;https://ciespinosa.github.io/Similitud/distancias-entre-sitios.html#distancia-euclidiana&gt;</span></span>
+<span id="cb13-253"><a href="#cb13-253" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-254"><a href="#cb13-254" aria-hidden="true" tabindex="-1"></a>Martínez, S., &amp; Acosta, A. (2005). Cambio temporal en la estructura de la comunidad coralina del área de Santa Marta-Parque Nacional Natural Tayrona (Caribe colombiano).&nbsp;*Boletín de Investigaciones Marinas y Costeras-INVEMAR*,&nbsp;*34*(1), 161-191.</span>
+<span id="cb13-255"><a href="#cb13-255" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-256"><a href="#cb13-256" aria-hidden="true" tabindex="-1"></a>Rodríguez-Barrios, J. (2022). Análisis de datos ecológicos y ambientales: aplicaciones con programa R. Ediciones Díaz de Santos.<span class="ot">&lt;https://www-ebooks7-24-com.biblioteca.unimagdalena.edu.co/?il=26489&gt;</span></span>
+<span id="cb13-257"><a href="#cb13-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-258"><a href="#cb13-258" aria-hidden="true" tabindex="-1"></a>Rojas-Jimenez, K. 2022. Capítulo 6 Análisis de Cluster, Mapas de Calor y Análisis Multivariados. Ciencia de Datos para Ciencias Naturales. <span class="ot">&lt;https://bookdown.org/keilor_rojas/CienciaDatos/an%C3%A1lisis-de-cluster-mapas-de-calor-y-an%C3%A1lisis-multivariados.html&gt;</span></span>
+<span id="cb13-259"><a href="#cb13-259" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-260"><a href="#cb13-260" aria-hidden="true" tabindex="-1"></a>Soria-Barreto M. y J. Paulo-Maya. 2005. Morfometría comparada del aparato mandibular en especies de Chirostoma (Atheriniformes : Atherinopsidae) del Lago de Pátzcuaro, Michoacán, México. Hidrobiológica 15 (2 Especial): 161-168.</span>
+<span id="cb13-261"><a href="#cb13-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-262"><a href="#cb13-262" aria-hidden="true" tabindex="-1"></a><span class="in">```{=html}</span></span>
+<span id="cb13-263"><a href="#cb13-263" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;style&gt; </span></span>
+<span id="cb13-264"><a href="#cb13-264" aria-hidden="true" tabindex="-1"></a><span class="in">body { text-align: justify} </span></span>
+<span id="cb13-265"><a href="#cb13-265" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;/style&gt;</span></span>
+<span id="cb13-266"><a href="#cb13-266" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+</code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>
